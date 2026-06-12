@@ -16,6 +16,7 @@
     "ansi-styles": "^4.3.0",
     "atomic-sleep": "^1.0.0",
     "avvio": "^9.2.0",
+    "better-sqlite3": "^12.10.0",
     "chalk": "^4.1.2",
     "chokidar": "^5.0.0",
     "chownr": "^3.0.0",
@@ -28,6 +29,7 @@
     "crypto-random-string": "^4.0.0",
     "dateformat": "^4.6.3",
     "dequal": "^2.0.3",
+    "drizzle-orm": "^0.45.2",
     "end-of-stream": "^1.4.5",
     "fast-copy": "^4.0.3",
     "fast-decode-uri-component": "^1.0.1",
@@ -115,13 +117,16 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
     "c8": "^11.0.0",
+    "drizzle-kit": "^0.31.10",
     "prettier": "3.8.4"
   },
   "scripts": {
     "test": "node --test test/**/*.test.js",
     "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "dev": "fastify start -w -l info -P app.js",
+    "drizzle-kit": "drizzle-kit"
   },
   "repository": {
     "type": "git",
