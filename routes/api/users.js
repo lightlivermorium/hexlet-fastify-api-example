@@ -4,53 +4,82 @@ import * as schemas from '../../db/schema.js';
 export default async function (fastify) {
   const db = fastify.db;
 
-  fastify.get('/users', async function (request) {
-    const perPage = 10;
-    const { page = 1 } = request.query;
-    const users = await db.query.users.findMany({
-      orderBy: asc(schemas.users.id),
-      limit: perPage,
-      offset: (Number(page) - 1) * perPage,
-    });
+  fastify.get(
+    '/users',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async function (request) {
+      const perPage = 10;
+      const { page = 1 } = request.query;
 
-    return users;
-  });
+      return await db.query.users.findMany({
+        orderBy: asc(schemas.users.id),
+        limit: perPage,
+        offset: (Number(page) - 1) * perPage,
+      });
+    },
+  );
 
-  fastify.get('/users/:id', async (request) => {
-    const user = await db.query.users.findFirst({
-      where: eq(schemas.users.id, request.params.id),
-    });
-    fastify.assert(user, 404);
-    return user;
-  });
+  fastify.get(
+    '/users/:id',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request) => {
+      const user = await db.query.users.findFirst({
+        where: eq(schemas.users.id, request.params.id),
+      });
+      fastify.assert(user, 404);
+      return user;
+    },
+  );
 
-  fastify.post('/users', async (request, reply) => {
-    const [user] = await db
-      .insert(schemas.users)
-      .values(request.body)
-      .returning();
+  fastify.post(
+    '/users',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      const [user] = await db
+        .insert(schemas.users)
+        .values(request.body)
+        .returning();
 
-    return reply.code(201).send(user);
-  });
+      return reply.code(201).send(user);
+    },
+  );
 
-  fastify.patch('/users/:id', async (request) => {
-    const [user] = await db
-      .update(schemas.users)
-      .set(request.body)
-      .where(eq(schemas.users.id, request.params.id))
-      .returning();
-    fastify.assert(user, 404);
+  fastify.patch(
+    '/users/:id',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request) => {
+      const [user] = await db
+        .update(schemas.users)
+        .set(request.body)
+        .where(eq(schemas.users.id, request.params.id))
+        .returning();
+      fastify.assert(user, 404);
 
-    return user;
-  });
+      return user;
+    },
+  );
 
-  fastify.delete('/users/:id', async (request, reply) => {
-    const [user] = await db
-      .delete(schemas.users)
-      .where(eq(schemas.users.id, request.params.id))
-      .returning();
-    fastify.assert(user, 404);
+  fastify.delete(
+    '/users/:id',
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      const [user] = await db
+        .delete(schemas.users)
+        .where(eq(schemas.users.id, request.params.id))
+        .returning();
+      fastify.assert(user, 404);
 
-    return reply.code(204).send();
-  });
+      return reply.code(204).send();
+    },
+  );
 }

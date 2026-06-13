@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import * as assert from 'node:assert';
 import { build } from '../../helper.js';
-import { buildCourse, buildUser } from '../../../lib/data.js';
+import { buildCourse } from '../../../lib/data.js';
 
 test('get courses', async (t) => {
   const app = await build(t);
